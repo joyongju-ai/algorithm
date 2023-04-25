@@ -1,6 +1,6 @@
 #그리디
 #각 마을마다 트럭에 실린 박스를 교체,배달
-#교체하는 경우는 트럭의 실린 박스 중 목적지가 먼 것을 더 가까운 새 박스와 교체
+#교체하는 경우는 트럭의 실린 박스 중 목적지가 가장 먼 것을 더 가까운 새 박스와 교체
 #즉, 트럭에 실린 박스는 항상 목적지가 가장 가까운 것들로만 채워야 한다
 
 #중요 
@@ -45,9 +45,9 @@ for vil in range(1,n+1):
   while q and q[0][0]==vil:
     start,end,count=q.popleft()
     temp_count=count  #임시 박스 수 
-    #truck을 확인하며 목적지가 더 먼 박스가 있으면 내리기
-    for i in range(len(truck)):
-      #목적지가 더 먼 박스는 내린다
+    #truck을 역순으로 확인하며 목적지가 더 먼 박스가 있으면 내리기
+    for i in range(len(truck)-1,-1,-1):
+      #목적지가 더 먼 박스가 있다면 내린다
       if truck[i][0]>end:
         #만약 임시 박스 수가 내리는 박스 수보다 많으면 
         if temp_count>truck[i][1]:
@@ -69,9 +69,8 @@ for vil in range(1,n+1):
       box+=count      #트럭 내 박스 수 증가
     #용량 초과 시 용량 될 때까지만 박스 넣기
     else:
-      if box!=c:      
-        heapq.heappush(truck,[end,c-box])  #[목적지,가능한 박스 수]
-        box=c    #현재 트럭 내에 실린 박스는 용량만큼이므로
+      heapq.heappush(truck,[end,c-box])  #[목적지,가능한 박스 수]
+      box=c    #현재 트럭 내에 실린 박스는 용량만큼이므로
         
   #print(result)
   #print()
