@@ -1,41 +1,40 @@
-n,m=map(int,input().split())
+n,m = list(map(int,input().split()))
+x,y,d = list(map(int,input().split()))
 
-x,y,d=map(int,input().split())
-
-graph=[]
+g_map = []
 for i in range(n):
-  graph.append(list(map(int,input().split())))
+    g_map.append(list(map(int, input().split())))
 
-visited=[[0]*m for _ in range(n)]
+g_map[x][y] = 2 
+moves = [(-1,0),(0,1),(1,0),(0,-1)]
 
-dx=[-1,0,1,0]
-dy=[0,1,0,-1]
-
-def dfs(x,y,d):
-  #print(visited)
-  if graph[x][y]==1:
-    return 
-  visited[x][y]=2
-  for i in range(4):
-    d=d-1
-    if d==-1:
-      d=3
-    #print(d)
-    nx=x+dx[d]
-    ny=y+dy[d]
-    if not(0<=nx<n and 0<=ny<m):
-      continue
-    if graph[nx][ny]==1 or visited[nx][ny]!=0:
-      continue
-    return dfs(nx,ny,d)
-  return dfs(x-dx[d],y-dy[d],d)
-
-    
-dfs(x,y,d)
-count=0
-for i in range(n):
-  for j in range(m):
-   if visited[i][j]==2:
-     count+=1
-
-print(count)
+count = 0
+result = 1
+while(True):
+    count += 1
+    if count > 4:
+        nx = x - moves[d][0]
+        ny = y - moves[d][1]
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+        if g_map[nx][ny] == 1:
+            break
+        x = nx
+        y = ny
+        count = 0
+    else:
+        d = (d+3)%4
+        nx = x + moves[d][0]
+        ny = y + moves[d][1]
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+        if g_map[nx][ny] == 1 or g_map[nx][ny] == 2:
+            continue
+        if g_map[nx][ny] == 0:
+            x = nx
+            y = ny
+            result += 1
+            g_map[x][y] = 2
+            count = 0
+        
+print(result)
