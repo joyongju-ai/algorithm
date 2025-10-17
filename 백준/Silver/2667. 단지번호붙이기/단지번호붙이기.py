@@ -1,46 +1,45 @@
-n=int(input())
+import sys
+input = sys.stdin.readline
 
-field=[]
+n = int(input())
+
+house_map =[]
 for i in range(n):
-  array=input()
-  array=" ".join(array)
-  field.append(list(map(int,array.split())))
+    temp = list(input().strip())
+    house_map.append(temp)
+#print(ice_map)
 
-visited=[[False]*n for _ in range(n)]
+visited= [[False]*n for _ in range(n)]
 
-dx=[1,0,-1,0]
-dy=[0,1,0,-1]
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
 
-
-def dfs(start,count):
-  x,y=start
-  visited[x][y]=True
-  field[x][y]=count
-  for k in range(4):
-    nx=x+dx[k]
-    ny=y+dy[k]
-    if 0<=nx<n and 0<=ny<n:
-      if field[nx][ny]==1 and visited[nx][ny]==False:
-        dfs((nx,ny),count)
+def dfs(house_map,v,visited,house_pos):
+    x,y = v
+    visited[x][y] = True
+    for i in range(4):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        if nx < 0 or nx >= n or ny < 0 or ny >= n:
+            continue
+        if not visited[nx][ny] and house_map[nx][ny] == '1':
+            house_pos.append((nx,ny))
+            dfs(house_map,(nx,ny),visited,house_pos)
     
-  
-  
-count=0
+count = 0
+house_count =[]
 for i in range(n):
-  for j in range(n):
-    if field[i][j]==1 and visited[i][j]==False:
-      start=(i,j)
-      count+=1
-      dfs(start,count)
-      
-print(count)
-
-houses=[0]*(count+1)
-for k in range(1,count+1):
-    for i in range(n):
-      for j in range(n):
-        if field[i][j]==k:
-          houses[k]+=1
-houses.sort()
-for i in houses[1:]:
-  print(i)
+    for j in range(n):
+        house_pos =[] 
+        i = int(i)
+        j = int(j)
+        if house_map[i][j] == '1' and not visited[i][j]:
+            count += 1
+            house_pos.append((i,j))
+            dfs(house_map,(i,j),visited,house_pos)
+            house_count.append(len(house_pos))
+            
+print(count)   
+house_count.sort()
+for i in house_count:
+    print(i)
