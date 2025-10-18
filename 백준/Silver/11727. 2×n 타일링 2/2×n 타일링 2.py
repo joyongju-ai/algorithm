@@ -1,17 +1,12 @@
-#dp
-#규칙 찾기 어려웠다
-#반복 학습 필요
-#dp 테이블 (n+1)로 초기화했는데 n이 1이면 dp[2]가 없어 런타임에러
-#1000이 최댓값이므로 1001로 초기화
+import sys
+input = sys.stdin.readline
+n = int(input().rstrip())
 
-n=int(input())
-
-#dp테이블 초기화
-dp=[0]*1001    
-dp[1]=1
-dp[2]=3
+dp = [0]*(1001)
+dp[1] = 1
+dp[2] = 3
 
 for i in range(3,n+1):
-  dp[i]=dp[i-1]+dp[i-2]*2 # 점화식
+    dp[i] = dp[i-1] +dp[i-2]*2
 
 print(dp[n]%10007)
