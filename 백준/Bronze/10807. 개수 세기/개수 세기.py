@@ -7,9 +7,7 @@ v = int(input().rstrip())
 
 dp = [0]*(201)
 
-count = 0
 for i in range(len(nums)):
-    if nums[i] == v:
-        count += 1
-
-print(count)
+    dp[nums[i]+100] += 1
+        
+print(dp[v+100])
