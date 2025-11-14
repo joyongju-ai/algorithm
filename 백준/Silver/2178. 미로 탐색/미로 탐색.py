@@ -1,41 +1,25 @@
-#최단 경로는 bfs
-import sys
 from collections import deque
-input = sys.stdin.readline
 
-n,m = list(map(int,input().strip().split())) #readline에는 개행문자 들어감에 주의
-maze = []
-for i in range(n):
-    temp = list(map(int,input().strip()))
-    maze.append(temp)
+n, m = map(int, input().split())
+maze = [list(input()) for i in range(n)]
+dist = [[-1]*m for i in range(n)]
 
-visited=[[False]*m for _ in range(n)]
+q = deque([(0, 0)])
+dist[0][0] = 1
 
-count_map = [[0]*m for _ in range(n)] #
-start =(0,0)
-goal = (n,m)
-dx = [0,1,0,-1]
-dy = [1,0,-1,0]
+dx = [0, 1, 0, -1]
+dy = [1, 0, -1, 0]
 
-def bfs(maze, start, visited, goal ):
-    queue = deque([start])
-    visited[0][0] = True
-    count_map[0][0] = 1
-    n,m = goal
-    while(queue):
-        x,y = queue.popleft()
-        for i in range(4):
-            nx = x +dx[i]
-            ny = y +dy[i]
-            if nx < 0 or nx >= n or ny <0 or ny >= m:
-                continue
-            if not visited[nx][ny] and maze[nx][ny] == 1:
-                queue.append((nx,ny))
-                visited[nx][ny] = True
-                count_map[nx][ny] = count_map[x][y] + 1 #
-        if visited[n-1][m-1]:
-            break
-    return count_map[n-1][m-1]               
-    
-result = bfs(maze, start, visited, goal)
-print(result)
+while q:
+    x, y = q.popleft()
+    #print(x, y)
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+        if dist[nx][ny] != -1 or maze[nx][ny] != '1':
+            continue
+        dist[nx][ny] = dist[x][y] + 1
+        q.append((nx, ny))
+
+print(dist[n-1][m-1])
