@@ -1,23 +1,22 @@
 from collections import deque
-f,start,goal,up,down=map(int,input().split()) 
 
-distance=[0]*(f+1)
+f,s,g,u,d = list(map(int,input().split()))
 
-q=deque([start])
-distance[start]=1
+dist = [-1] * (f+1)
+q = deque([s])
+dist[s] = 0
 
 while q:
-  now=q.popleft()
+    x = q.popleft()
 
-  for i in [now+up,now-down]:
-    if not(1<=i<=f and distance[i]==0):
-      continue
-    distance[i]=distance[now]+1
-    q.append(i)
-  if distance[goal]>0:
-    break
+    for nx in [x+u,x-d]:
+        if nx < 1 or nx > f:
+            continue
+        if dist[nx] == -1:
+            dist[nx] = dist[x] + 1
+            q.append(nx)
 
-if distance[goal]==0:
-  print("use the stairs")
+if dist[g] != -1:
+    print(dist[g])
 else:
-  print(distance[goal]-1)
+    print("use the stairs")
