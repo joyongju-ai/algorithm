@@ -1,54 +1,28 @@
-n,w,l = map(int,input().split())
+from collections import deque
 
-truck_weight = list(map(int,input().split()))
-count = 0
+n, w, L = map(int, input().split())
+trucks = list(map(int, input().split()))
 
+# 길이가 w인 다리를 큐로 모델링한 것
+# 큐의 왼쪽이 다리의 입구, 오른쪽이 다리의 끝
+# 0은 빈 자리 → 트럭이 없는 공간을 의미
+bridge = deque([0]*w)  # 큐 이용
+time = 0            # 다리 건너는 시간
+weight = 0          # 다리 위 트럭들의 무게 합
 
-#다리 이동 총괄
-def move():
-    global count
-    bridge = [0] * w  # 다리 길이만큼 부여
-    i = 0
+for t in trucks:            #트럭 하나씩 처리
+    # 트럭 넣을 때까지 반복
     while True:
-        if i == n and sum(bridge) == 0:
+        time += 1
+        weight -= bridge.popleft()  # 맨 앞 트럭 나감, 무게 감소 
+
+        # 새 트럭이 올라갈 수 있으면 올리고 break
+        if weight + t <= L:         
+            bridge.append(t)        # 트럭을 다리에 올리기
+            weight += t             # 무게 추가
             break
-        bridge2 = [x for x in bridge]
-        if i < n and sum(bridge) + truck_weight[i] <= l:
-            bridge2 = step(bridge2)
-            bridge2[-1] = truck_weight[i]
-            count += 1
-            i += 1
-        elif i < n and sum(bridge) + truck_weight[i] > l:
-            for j in range(w):
-                if bridge[j] > 0:
-                    idx = j
-                    break
-            for _ in range(idx+1):
-                bridge2 = step(bridge2)
-                count += 1
-            if i < n and sum(bridge2) + truck_weight[i] <= l:
-                bridge2[-1] = truck_weight[i]
-                i += 1
-        elif i == n:
-            bridge2 = step(bridge2)
-            count += 1
-        bridge = [y for y in bridge2]
-        #print(bridge,count)
+        else:
+            bridge.append(0)  # 트럭이 못 올라오면 빈 칸 밀기
 
-
-# 다리 위의 차가 1번 이동하는 함수
-def step(bridge):
-    changed_bridge = [0]*w
-    for i in range(w):
-        if bridge[i] == 0:
-            continue
-        if i == 0:
-            continue
-        elif i > 0:
-            changed_bridge[i-1] = bridge[i]
-    #print(changed_bridge)
-    return changed_bridge
-
-
-move()
-print(count)
+time += w # 마지막으로 다리에 올라간 트럭을 건너게 하기 위해
+print(time)
