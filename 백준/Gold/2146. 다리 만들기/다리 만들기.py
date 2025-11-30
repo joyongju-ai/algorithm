@@ -1,57 +1,70 @@
 from collections import deque
-
-dx = [1, -1, 0, 0]
-dy = [0, 0, 1, -1]
-
-def bfs(x, y):
-    q = deque()
-    q.appendleft((x, y))
-    graph[x][y] = tmp
-    while q:
-        x, y = q.pop()
-        for i in range(4):
-            xx, yy = x + dx[i], y + dy[i]
-            if not(0 <= xx < n and 0 <= yy < n):
-                continue
-            if graph[xx][yy] != 1:
-                continue
-            graph[xx][yy] = tmp
-            q.appendleft((xx, yy))
-
-def bfs2(x, y, index):
-    q = deque()
-    q.appendleft((x, y))
-    visited[x][y] = 1
-    while q:
-        x, y = q.pop()
-        for i in range(4):
-            xx, yy = x + dx[i], y + dy[i]
-            if not(0 <= xx < n and 0 <= yy < n):
-                continue
-            if visited[xx][yy] != 0 or graph[xx][yy] == index:
-                continue
-            if graph[xx][yy] != index and graph[xx][yy] != 0:
-                return visited[x][y] - 1
-            q.appendleft((xx, yy))
-            visited[xx][yy] = visited[x][y] + 1
-    return 10 ** 10
-
 n = int(input())
-graph = []
-for _ in range(n):
-    graph.append(list(map(int, input().split())))
+space = [list(map(int,input().split())) for _ in range(n)]
 
-tmp = 2
+dist =[[-1] * n for _ in range(n)]
+
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
+a = 0
+arrs = []
 for i in range(n):
     for j in range(n):
-        if graph[i][j] == 1:
-            bfs(i, j)
-            tmp += 1
+        if space[i][j] == 1 and dist[i][j] == -1:
+            q = deque([(i,j)])
+            dist[i][j] = 0
+            a += 1
+            arr = [(i,j)]
+            space[i][j] = a
+            while q:
+                x,y = q.popleft()
+                for i in range(4):
+                    nx,ny = x + dx[i], y + dy[i]
+                    if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                        continue
+                    if space[nx][ny] == 1 and dist[nx][ny] == -1:
+                        space[nx][ny] = a
+                        dist[nx][ny] = 0
+                        q.append((nx,ny))
+                        arr.append((nx,ny))
+            arrs.append(arr)
+        
+min_count = int(1e9)
+        
+for i in range(len(arrs)):
+    dist = [[-1] * n for _ in range(n)]
+    q2 = deque()
+    count = 0
+    flag = 0
+    for x,y in arrs[i]:
+        for j in range(4):
+            nx,ny = x + dx[j], y + dy[j]
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                continue
+            if space[nx][ny] == 0:
+                q2.append((x,y))
+                dist[x][y] = 0
+                break
+    while q2:
+        x,y = q2.popleft()
+        
+        for j in range(4):
+            nx,ny = x + dx[j], y + dy[j]
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                continue
+            if space[nx][ny] == 0 and dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                q2.append((nx,ny))
+            if space[nx][ny] != i+1 and space[nx][ny] != 0:
+                #print(x,y)
+                count = dist[x][y]
+                flag = 1
+                break
+        if flag == 1:
+            break       
+    
+    # for k in range(n):
+    #     print(dist[k])
+    min_count = min (min_count,count)
 
-ans = 10 ** 10
-for i in range(n):
-    for j in range(n):
-        if graph[i][j] != 0:
-            visited = [[0] * n for _ in range(n)]
-            ans = min(bfs2(i, j, graph[i][j]), ans)
-print(ans)
+print(min_count)
