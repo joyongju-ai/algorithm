@@ -131,10 +131,7 @@ int pinball_move(Pinball& pinball, int N,int wcnt) {
 		if (moves != 0 && y == pinball.y && x == pinball.x) {
 			return point;
 		}
-		// 시작점이나 블랙홀 도달 못할 경우
-		if (moves > 20000) {
-			return 0;
-		}
+		
 		
 	}
 
