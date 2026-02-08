@@ -75,8 +75,6 @@ int main() {
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				memset(visited, 0, sizeof(visited));
-				memset(visited_value, 0, sizeof(visited_value));
 				//cout << i <<" "<< j << "\n";
 				st = { i,j };
 				dfs(st, 0, 0, MAP[i][j],4);
