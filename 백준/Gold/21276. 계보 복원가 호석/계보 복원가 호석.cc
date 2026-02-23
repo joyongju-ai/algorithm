@@ -115,7 +115,7 @@ int main() {
 		ordered_names.pop();
 		int parent_idx = name_num[ordered_name];
 		
-		cout << ordered_name << " "<<v[parent_idx].size()<<" ";
+		cout << ordered_name << " "<<v_str[parent_idx].size()<<" ";
 		for (string child_name : v_str[parent_idx]) {
 			cout << child_name << " ";
 		}
